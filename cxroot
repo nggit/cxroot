@@ -48,24 +48,16 @@ fi
 cp -f /etc/resolv.conf "$ROOTFS/etc/resolv.conf"
 
 # Mount virtual Kernel file systems and chroot.
-#
 mount -o bind /dev "$ROOTFS/dev"
-# mount -t devpts devpts "$ROOTFS/dev/pts"
-# mount -t tmpfs shm "$ROOTFS/dev/shm"
 mount -t proc proc "$ROOTFS/proc"
 mount -t sysfs sysfs "$ROOTFS/sys"
-# mount -o bind /tmp "$ROOTFS/tmp"
 
 printf "Chrooting into %s...\n" "$ROOTFS"
 chroot "$ROOTFS" /bin/su -
 
 # Unmount virtual Kernel file systems on exit.
-#
 umount "$ROOTFS/dev"
-# umount "$ROOTFS/dev/shm"
-# umount "$ROOTFS/dev/pts"
 umount "$ROOTFS/proc"
 umount "$ROOTFS/sys"
-# umount "$ROOTFS/tmp"
 
 printf "Exiting %s chroot environment...\n" "$ROOTFS"
