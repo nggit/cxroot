@@ -17,5 +17,27 @@ Make sure you choose the correct architecture and then extract it under `/data/r
 ./cxroot distro
 ./cxroot /data/another/path/distro
 ```
+## Example
+Let's create a chroot environment based on Alpine Linux...
+```
+# Download Alpine Linux rootfs (2.8M)
+wget https://uk.images.linuxcontainers.org/images/alpine/3.14/arm64/default/20211016_13:00/rootfs.tar.xz
+
+su
+mkdir -p /data/rootfs/alpine
+
+# Extract rootfs.tar.xz to /data/rootfs/alpine
+tar -xvf rootfs.tar.xz -C /data/rootfs/alpine
+
+# Download cxroot script
+wget https://raw.githubusercontent.com/nggit/cxroot/master/cxroot
+chmod +x cxroot
+
+# Enter Alpine Linux chroot environment
+./cxroot /data/rootfs/alpine
+
+# Exit Alpine Linux chroot environment
+exit
+```
 ## Screenshot
 ![cxroot](cxroot.png)

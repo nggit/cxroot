@@ -25,6 +25,15 @@ else
     exit 1
 fi
 
+busybox=$( command -v busybox )
+
+if [ -x "$busybox" ]; then
+    alias chroot="\$busybox chroot"
+    alias grep="\$busybox grep"
+    alias mount="\$busybox mount"
+    alias umount="\$busybox umount"
+fi
+
 # text_exists PATTERN FILE
 # Check if a text exists within a FILE
 text_exists() {
@@ -44,6 +53,9 @@ if text_exists "^_apt:x:100:65534:" "$ROOTFS/etc/passwd"; then
         && echo "_apt:x:100:3003::/nonexistent:/bin/false" >> "$ROOTFS/etc/passwd"
 fi
 
+# Copy /etc/hosts
+cp -f /etc/hosts "$ROOTFS/etc/hosts"
+
 # Copy /etc/resolv.conf
 cp -f /etc/resolv.conf "$ROOTFS/etc/resolv.conf"
 
@@ -53,7 +65,7 @@ mount -t proc proc "$ROOTFS/proc"
 mount -t sysfs sysfs "$ROOTFS/sys"
 
 printf "Chrooting into %s...\n" "$ROOTFS"
-chroot "$ROOTFS" /bin/su -
+chroot "$ROOTFS" /bin/su -c "test -e /etc/motd && cat /etc/motd; \${SHELL-sh}" -
 
 # Unmount virtual Kernel file systems on exit.
 umount "$ROOTFS/dev"
